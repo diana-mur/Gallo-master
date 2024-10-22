@@ -1,0 +1,93 @@
+.admin-panel {
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+	font-family: Arial, sans-serif;
+	color: #ffffff;
+	height: 100vh;
+}
+
+.search-bar {
+	margin-bottom: 20px;
+}
+
+.search-bar input {
+	width: 100%;
+	padding: 10px;
+	background-color: #333;
+	color: #fff;
+	border: 1px solid #555;
+	border-radius: 4px;
+}
+
+.content {
+	display: flex;
+}
+
+.filter-panel {
+	flex: 1;
+	height: 100%;
+	padding: 20px;
+	border: 1px solid #333;
+	background-color: #1e1e1e;
+	margin-right: 20px;
+}
+
+.filter-panel h3 {
+	margin-bottom: 10px;
+}
+
+.filter-panel ul {
+	list-style: none;
+	padding: 0;
+}
+
+.filter-panel li {
+	margin-bottom: 10px;
+}
+
+.filter-panel button {
+	width: 100%;
+	padding: 10px;
+	background-color: #333;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+	border-radius: 4px;
+}
+
+.filter-panel button:hover {
+	background-color: #444;
+}
+
+.client-list {
+	flex: 3;
+	overflow-y: auto;
+}
+
+.client-list table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.client-list th,
+.client-list td {
+	padding: 12px;
+	border: 1px solid #333;
+}
+
+.client-list th {
+	background-color: #444;
+}
+
+.client-list tr:nth-child(even) {
+	background-color: #1e1e1e;
+}
+
+.client-list tr:nth-child(odd) {
+	background-color: #333;
+}
+
+.client-list tr:hover {
+	background-color: #555;
+}
