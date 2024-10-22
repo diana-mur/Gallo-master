@@ -94,7 +94,7 @@ function Admin() {
 			method: 'GET',
 			mode: 'cors',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				'Authorization': `Bearer ${token}`,
 				'Content-Type': 'application/json',
 			},
 		})
