@@ -20,11 +20,12 @@ function FormCSGO() {
 	const [selectedAchievement, setSelectedAchievement] = useState('')
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [total, setTotal] = useState('')
+	const [isEmail, setIsEmail] = useState(false)
 
 	// Список игр с изображениями
 	const games = [
 		{ name: 'CS 2', unit: 'Эло', image: cs2Image },
-		{ name: 'Call of Duty: WarZone', unit: 'рейтингу', image: warzoneImage },
+		{ name: 'War Zone', unit: 'рейтингу', image: warzoneImage },
 		{ name: 'DOTA 2', unit: 'mmr', image: dota2Image },
 		{ name: 'Valorant', unit: 'званию', image: valorantImage },
 		{ name: 'Apex', unit: 'рангу', image: apexImage },
@@ -255,10 +256,12 @@ function FormCSGO() {
 
 	const handleInputChange = (e) => {
 		const value = e.target.value
-		setRank(prevRange => ({
-			...prevRange,
-			[activeInput]: value,
-		}))
+		if (value >= 0 && value <= 30000) {
+			setRank(prevRange => ({
+				...prevRange,
+				[activeInput]: value,
+			}))
+		}
 	}
 
 	const handleFocus = e => {
@@ -272,6 +275,13 @@ function FormCSGO() {
 	const handleAchievementChange = e => {
 		setSelectedAchievement(e.target.value)
 	}
+
+	const handleEmail = (e) => {
+		const input = e.target.value
+		setEmail(input)
+		const clean = /^[^\s@]+@[^\s@]+\.\[^\s@]/
+		setIsEmail(clean.test(input))
+	}	
 
 	const summaStars = (star, array) => {
 		let summa = 0
@@ -365,7 +375,7 @@ function FormCSGO() {
 			setTotal(totalCost);
 		}
 
-		if (games[currentGameIndex].name === 'Call of Duty: WarZone') {
+		if (games[currentGameIndex].name === 'War Zone') {
 			let totalCost = 0;
 
 			for (let mmr = Number(rank.from) + 1; mmr <= Number(rank.to); mmr++) {
@@ -449,7 +459,7 @@ function FormCSGO() {
 
 				sumDivisions -= (priceRangs * x) / 3;
 				console.log(sumDivisions);
-				
+
 
 				rank.to - rank.from == 1
 					?
@@ -493,7 +503,7 @@ function FormCSGO() {
 	const closeModal = () => {
 		setIsModalOpen(false)
 	}
-	
+
 	const sendForm = async () => {
 		fetch(`${import.meta.env.VITE_API_URL}/form`, {
 			method: 'POST',
@@ -502,17 +512,17 @@ function FormCSGO() {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				name, 
-				email, 
-				social, 
-				details, 
-				game: games[currentGameIndex].name, 
-				rankFrom: rank?.from, 
-				rankTo: rank?.to, 
-				rangeFrom: range?.from, 
-				rangeTo: range?.to, 
-				character: selectedCharacter, 
-				achieve: selectedAchievement, 
+				name,
+				email,
+				social,
+				details,
+				game: games[currentGameIndex].name,
+				rankFrom: rank?.from,
+				rankTo: rank?.to,
+				rangeFrom: range?.from,
+				rangeTo: range?.to,
+				character: selectedCharacter,
+				achieve: selectedAchievement,
 				price: total
 			}),
 		})
@@ -836,7 +846,7 @@ function FormCSGO() {
 							/>
 						</>
 					)}
-					{games[currentGameIndex].name === 'Call of Duty: WarZone' && (
+					{games[currentGameIndex].name === 'War Zone' && (
 						<>
 							<p className='boost-calculator__range-label'>
 								Выбрать кол-во по {games[currentGameIndex].unit}:
@@ -846,6 +856,8 @@ function FormCSGO() {
 									type='number'
 									name='from'
 									pattern='[0-9]'
+									min='0'
+									max='30000'
 									value={rank.from}
 									onChange={handleInputChange}
 									onFocus={handleFocus}
@@ -856,6 +868,8 @@ function FormCSGO() {
 									type='number'
 									name='to'
 									pattern='[0-9]'
+									min='0'
+									max='30000'
 									value={rank.to}
 									onChange={handleInputChange}
 									onFocus={handleFocus}
@@ -900,7 +914,7 @@ function FormCSGO() {
 													className='input-field'
 													placeholder='Введите ваше имя'
 													value={name}
-													onChange={e => setName(e.target.value)}
+													onChange={e => setName(e.target.value.replace(/[^А-Яа-яA-Za-z-]/g, ''))}
 												/>
 												<span className='Name'></span>
 											</div>
@@ -913,7 +927,7 @@ function FormCSGO() {
 													className='input-field'
 													placeholder='Email address'
 													value={email}
-													onChange={e => setEmail(e.target.value)}
+													onChange={handleEmail}
 												/>
 												<span className='Email'></span>
 											</div>
@@ -929,7 +943,7 @@ function FormCSGO() {
 												className='input-field'
 												placeholder='vk.com'
 												value={social}
-												onChange={e => setSocial(e.target.value)}
+												onChange={e => setSocial(e.target.value.replace(/[^А-Яа-яA-Za-z-/:]/g, ''))}
 											/>
 											<span className='Network'></span>
 										</div>
@@ -941,12 +955,19 @@ function FormCSGO() {
 												className='textarea-field'
 												placeholder='Комментарии...'
 												value={details}
-												onChange={e => setDetails(e.target.value)}
+												onChange={e => setDetails(e.target.value.replace(/[^А-Яа-яA-Za-z0-9-]/g, ''))}
 											></textarea>
 										</div>
-										<button onClick={sendForm} type='submit' className='submit-button'>
-											Отправить
-										</button>
+										{
+											isEmail && total > 0 && <button onClick={sendForm} type='submit' className='submit-button'>
+												Отправить
+											</button>
+										}
+										{
+											!isEmail && <button onClick={sendForm} type='submit' className='submit-button' disabled>
+												Отправить
+											</button>
+										}
 									</form>
 								</div>
 							</div>
