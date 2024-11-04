@@ -20,7 +20,7 @@ function FormCSGO() {
 	const [selectedAchievement, setSelectedAchievement] = useState('')
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [total, setTotal] = useState('')
-	const [isEmail, setIsEmail] = useState(false)
+	const [isEmail, setIsEmail] = useState('')
 
 	// Список игр с изображениями
 	const games = [
@@ -279,9 +279,11 @@ function FormCSGO() {
 	const handleEmail = (e) => {
 		const input = e.target.value
 		setEmail(input)
-		const clean = /^[^\s@]+@[^\s@]+\.\[^\s@]/
+		const clean = /^[^\s@]+@[^\s@]+\.[^\s@]/
 		setIsEmail(clean.test(input))
 	}	
+	console.log(isEmail);
+	
 
 	const summaStars = (star, array) => {
 		let summa = 0
@@ -930,6 +932,7 @@ function FormCSGO() {
 													onChange={handleEmail}
 												/>
 												<span className='Email'></span>
+												<p>{isEmail === false ? "Введите корректный e-mail" : ""}</p>
 											</div>
 										</div>
 										<div className='form-group'>
